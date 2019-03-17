@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">WeatherApp</string>
+    <string name="hint_edittext">Enter the Query</string>
+    <string name="menu_button">Run</string>
 </resources>
