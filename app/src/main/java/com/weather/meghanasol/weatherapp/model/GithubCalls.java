@@ -2,6 +2,7 @@ package com.weather.meghanasol.weatherapp.model;
 
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -15,14 +16,15 @@ public class GithubCalls implements Callback<List<Data>> {
     private GithubCallsCallback githubCallsCallback;
     private String name;
 
-    public GithubCalls(GithubServices service, GithubCallsCallback githubCallsCallback,String name) {
+    public GithubCalls(GithubServices service, GithubCallsCallback githubCallsCallback, String name) {
         Log.w(TAG, "Calls");
         this.service = service;
         this.githubCallsCallback = githubCallsCallback;
         this.name = name;
         if (service != null) {
-            Call<List<Data>> data = service.listRepos(name,"repos");
+            Call<List<Data>> data = service.listRepos(name, "repos");
             if (data != null) {
+                // Asynchronous
                 data.enqueue(this);
             } else {
                 Log.w(TAG, "Object No creatd");
@@ -34,14 +36,17 @@ public class GithubCalls implements Callback<List<Data>> {
 
     @Override
     public void onResponse(Call<List<Data>> call, Response<List<Data>> response) {
+
+        List<String> data = new ArrayList<>();
+
         githubCallsCallback.urlPinged(call.request().toString());
         Log.w(TAG, "Requested Url ::" + call.request());
         Log.w(TAG, "Response Successfull ::" + response.isSuccessful());
         Log.w(TAG, "Response Error Body ::" + response.errorBody());
         List<Data> data1 = response.body();
-        for (Data da : data1) {
-            githubCallsCallback.datarecieved(da);
-        }
+        githubCallsCallback.datarecieved(data1);
+        Log.w(TAG, "Size  ::" + data1.size());
+
     }
 
     @Override
